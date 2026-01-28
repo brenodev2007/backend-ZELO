@@ -68,3 +68,25 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).send('Server error');
   }
 };
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { email, newPassword } = req.body;
+
+  try {
+    const [users] = await db.query<RowDataPacket[]>('SELECT * FROM users WHERE email = ?', [email]);
+    if (users.length === 0) {
+       res.status(404).json({ msg: 'User not found' });
+       return;
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await db.query('UPDATE users SET password = ? WHERE email = ?', [hashedPassword, email]);
+
+    res.json({ msg: 'Password updated successfully' });
+  } catch (err: any) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};

@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { register, login } from '../controllers/authController';
+import { register, login, resetPassword } from '../controllers/authController';
 import authMiddleware from '../middleware/authMiddleware';
 import db from '../config/db';
 import { RowDataPacket } from 'mysql2';
@@ -11,6 +11,9 @@ router.post('/register', register);
 
 // Login User
 router.post('/login', login);
+
+// Reset Password
+router.post('/reset-password', resetPassword);
 
 // Get User (Protected)
 interface AuthRequest extends Request {
