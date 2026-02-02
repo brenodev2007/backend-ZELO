@@ -5,9 +5,15 @@ import db from '../config/db';
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 export const register = async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, acceptedTerms } = req.body;
 
   try {
+    // Validate terms acceptance
+    if (!acceptedTerms) {
+      res.status(400).json({ msg: 'Você deve aceitar os Termos de Uso para criar uma conta.' });
+      return;
+    }
+
     const [existingUser] = await db.query<RowDataPacket[]>('SELECT * FROM users WHERE email = ?', [email]);
     if (existingUser.length > 0) {
        res.status(400).json({ msg: 'User already exists' });
