@@ -28,8 +28,7 @@ async function initializeDatabase() {
     
     console.log('✅ Tabelas criadas com sucesso!');
     console.log('📊 Estrutura do banco de dados:');
-    console.log('   - users (id, name, email, password, plan, created_at, updated_at)');
-    console.log('   - subscriptions (id, user_id, preapproval_id, status, plan, amount, created_at, updated_at)');
+    console.log('   - users (id, name, email, password, is_active, created_at, updated_at)');
     
     await connection.end();
     console.log('✅ Banco de dados inicializado com sucesso!');

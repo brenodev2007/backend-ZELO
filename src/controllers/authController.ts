@@ -59,6 +59,11 @@ export const login = async (req: Request, res: Response) => {
        return;
     }
 
+    if (!user.is_active) {
+       res.status(403).json({ msg: 'Sua conta foi desativada. Entre em contato com o suporte.' });
+       return;
+    }
+
     const payload = {
       user: {
         id: user.id,

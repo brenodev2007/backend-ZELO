@@ -3,7 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import db from './config/db';
 import authRoutes from './routes/authRoutes';
-import paymentRoutes from './routes/paymentRoutes';
 
 dotenv.config();
 
@@ -14,7 +13,6 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/payment', paymentRoutes);
 
 const PORT = process.env.PORT || 5000;
 
