@@ -47,4 +47,30 @@ router.get('/user', authMiddleware, async (req: AuthRequest, res: Response) => {
   }
 });
 
+// Update User Name (Protected)
+router.patch('/user', authMiddleware, async (req: AuthRequest, res: Response) => {
+  const { name } = req.body;
+  try {
+    if (!name || !name.trim()) {
+      res.status(400).json({ msg: 'Nome é obrigatório.' });
+      return;
+    }
+
+    await db.query('UPDATE users SET name = ? WHERE id = ?', [name.trim(), req.user.user.id]);
+
+    const [user] = await db.query<RowDataPacket[]>('SELECT id, name, email, is_active, is_admin, daily_tokens FROM users WHERE id = ?', [req.user.user.id]);
+
+    res.json({ 
+      id: user[0].id, 
+      name: user[0].name, 
+      email: user[0].email,
+      is_admin: Boolean(user[0].is_admin),
+      daily_tokens: user[0].daily_tokens
+    });
+  } catch (err: any) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 export default router;
